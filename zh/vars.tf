@@ -1,7 +1,7 @@
 variable "customer" {
   type = string
   description = "Customer name/acronym (keep to 3-4 letters)"
-  default = "zhealth"
+  default = "tmc"
 }
 
 variable "environment" {

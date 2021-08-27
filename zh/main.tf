@@ -44,7 +44,7 @@ resource "azurerm_resource_group" "app_rg" {
 
 #Create RG in WestUS2
 resource "azurerm_resource_group" "shared_rg" {
-  name     = "zhealth-sharedsvcs-dev-01-rg"
+  name     = "tmcealth-sharedsvcs-dev-01-rg"
   location = "westus2"
 }
 
@@ -63,7 +63,7 @@ data "azurerm_key_vault_secret" "sql_secret" {
 
 #Create an azure storage account v2 that will house a blob container
 resource "azurerm_storage_account" "blob_sa" {
-  name                        = "zhdevblob${random_string.random.result}"
+  name                        = "tmcdevblob${random_string.random.result}"
   resource_group_name         = azurerm_resource_group.data_rg.name
   location                    = azurerm_resource_group.data_rg.location
   account_tier                = "standard"
@@ -77,7 +77,7 @@ resource "azurerm_storage_account" "blob_sa" {
 }
 
 #SQL Server w/ elastic pool for Data layer and will house the Shard Mapping
-resource "azurerm_mssql_server" "zh_mssql" {
+resource "azurerm_mssql_server" "tmc_mssql" {
   name                         = var.mssql_svr_name
   resource_group_name          = azurerm_resource_group.data_rg.name
   location                     = azurerm_resource_group.data_rg.location
@@ -102,11 +102,11 @@ resource "azurerm_mssql_server" "zh_mssql" {
   }
 }
 
-resource "azurerm_mssql_elasticpool" "zh_elastipool" {
+resource "azurerm_mssql_elasticpool" "tmc_elastipool" {
   name                = var.mssql_pool_name
   resource_group_name = azurerm_resource_group.data_rg.name
   location            = azurerm_resource_group.data_rg.location
-  server_name         = azurerm_mssql_server.zh_mssql.name
+  server_name         = azurerm_mssql_server.tmc_mssql.name
   license_type        = "LicenseIncluded"
   max_size_gb         = 750
   
@@ -123,7 +123,7 @@ resource "azurerm_mssql_elasticpool" "zh_elastipool" {
 }
 
 #Mirth PostgreSQL instance
-resource "azurerm_postgresql_server" "zh_pgsql" {
+resource "azurerm_postgresql_server" "tmc_pgsql" {
   name                = var.pgsql_svr_name
   resource_group_name = azurerm_resource_group.data_rg.name
   location            = azurerm_resource_group.data_rg.location
